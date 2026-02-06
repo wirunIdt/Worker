@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการงานลูกค้า</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-box {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .login-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        /* Public Page Styles */
+        .public-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .public-header {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .public-header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .public-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .search-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .search-panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .search-form-full {
+            grid-column: 1 / -1;
+        }
+
+        /* Admin Dashboard Styles */
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            color: #666;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .admin-info {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-logout {
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .btn-logout:hover {
+            background: #c82333;
+        }
+
+        .task-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .task-customer {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .task-contact {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .task-description {
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-inprogress {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-completed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.85em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-status {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-small:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .priority-high {
+            border-left-color: #dc3545;
+        }
+
+        .priority-medium {
+            border-left-color: #ffc107;
+        }
+
+        .priority-low {
+            border-left-color: #28a745;
+        }
+
+        .priority-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .priority-high-badge {
+            background: #dc3545;
+            color: white;
+        }
+
+        .priority-medium-badge {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .priority-low-badge {
+            background: #28a745;
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #842029;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c2c7;
+        }
+
+        .info-message {
+            background: #cfe2ff;
+            color: #084298;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #b6d4fe;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-right {
+                text-align: center;
+                margin-top: 15px;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                position: static;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons" id="navButtons">
+        <button class="nav-btn" onclick="goToPublic()">🔍 ตรวจสอบออเดอร์</button>
+        <button class="nav-btn" onclick="goToAdmin()">🔐 Admin Login</button>
+    </div>
+
+    <!-- Public Order Tracking Page -->
+    <div id="publicPage" class="public-container hidden">
+        <div class="public-header">
+            <div class="login-icon">📦</div>
+            <h1>ตรวจสอบสถานะออเดอร์</h1>
+            <p>ค้นหาออเดอร์ของคุณด้วยชื่อและวันที่จัดส่ง</p>
+        </div>
+
+        <div class="search-panel">
+            <h2>🔍 ค้นหาออเดอร์</h2>
+            <div class="search-form">
+                <div class="form-group">
+                    <label>ชื่อลูกค้า</label>
+                    <input type="text" id="searchName" placeholder="กรอกชื่อของคุณ">
+                </div>
+                <div class="form-group">
+                    <label>วันที่จัดส่ง (ถ้ามี)</label>
+                    <input type="date" id="searchDate">
+                </div>
+                <div class="form-group search-form-full">
+                    <button class="btn btn-primary" onclick="searchOrders()">ค้นหา</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="searchResults" class="panel hidden">
+            <h2>📋 ผลการค้นหา</h2>
+            <div id="searchResultsList"></div>
+        </div>
+    </div>
+
+    <!-- Admin Login Page -->
+    <div id="loginPage" class="login-container hidden">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-icon">🔐</div>
+                <h1>Admin Login</h1>
+                <p>ระบบจัดการงานลูกค้า</p>
+            </div>
+
+            <div id="loginError" class="error-message hidden"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>ชื่อผู้ใช้</label>
+                    <input type="text" id="username" required placeholder="กรอกชื่อผู้ใช้" autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label>รหัสผ่าน</label>
+                    <input type="password" id="password" required placeholder="กรอกรหัสผ่าน" autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
+            </form>
+
+            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em; color: #666;">
+                <strong>ข้อมูลสำหรับทดสอบ:</strong><br>
+                Username: <code>admin</code><br>
+                Password: <code>admin123</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminPage" class="container hidden">
+        <div class="header">
+            <div class="header-left">
+                <h1>📋 ระบบจัดการงานลูกค้า</h1>
+                <p>Customer Task Management System</p>
+            </div>
+            <div class="header-right">
+                <div class="admin-info">👤 <span id="adminName"></span></div>
+                <button class="btn btn-logout" onclick="logout()">ออกจากระบบ</button>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">งานทั้งหมด</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingTasks">0</div>
+                <div class="stat-label">รอดำเนินการ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="inprogressTasks">0</div>
+                <div class="stat-label">กำลังดำเนินการ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="completedTasks">0</div>
+                <div class="stat-label">เสร็จสิ้น</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <h2>➕ เพิ่มงานใหม่</h2>
+                <form id="taskForm">
+                    <div class="form-group">
+                        <label>ชื่อลูกค้า *</label>
+                        <input type="text" id="customerName" required placeholder="ระบุชื่อลูกค้า">
+                    </div>
+
+                    <div class="form-group">
+                        <label>เบอร์โทร *</label>
+                        <input type="tel" id="customerPhone" required placeholder="0xx-xxx-xxxx">
+                    </div>
+
+                    <div class="form-group">
+                        <label>อีเมล</label>
+                        <input type="email" id="customerEmail" placeholder="email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ชื่องาน *</label>
+                        <input type="text" id="taskTitle" required placeholder="ระบุชื่องาน">
+                    </div>
+
+                    <div class="form-group">
+                        <label>รายละเอียดงาน *</label>
+                        <textarea id="taskDescription" required placeholder="อธิบายรายละเอียดงาน..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ความสำคัญ</label>
+                        <select id="taskPriority">
+                            <option value="low">ต่ำ</option>
+                            <option value="medium" selected>ปานกลาง</option>
+                            <option value="high">สูง</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>วันที่จัดส่ง</label>
+                        <input type="date" id="taskDeadline">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">เพิ่มงาน</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h2>📝 รายการงาน</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" data-filter="all">ทั้งหมด</button>
+                    <button class="tab" data-filter="pending">รอดำเนินการ</button>
+                    <button class="tab" data-filter="inprogress">กำลังทำ</button>
+                    <button class="tab" data-filter="completed">เสร็จสิ้น</button>
+                </div>
+
+                <div class="task-list" id="taskList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin credentials
+        const ADMIN_CREDENTIALS = {
+            'admin': 'admin123',
+            'manager': 'manager456'
+        };
+
+        let tasks = [];
+        let currentFilter = 'all';
+        let currentAdmin = null;
+        let currentPage = 'public'; // 'public', 'login', 'admin'
+
+        const storageAvailable = typeof window.storage !== 'undefined';
+
+        // Page Navigation
+        function goToPublic() {
+            currentPage = 'public';
+            showPage('publicPage');
+        }
+
+        function goToAdmin() {
+            const savedAdmin = localStorage.getItem('loggedInAdmin');
+            if (savedAdmin) {
+                currentAdmin = savedAdmin;
+                currentPage = 'admin';
+                showPage('adminPage');
+                loadTasks();
+            } else {
+                currentPage = 'login';
+                showPage('loginPage');
+            }
+        }
+
+        function showPage(pageId) {
+            document.getElementById('publicPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('adminPage').classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+            
+            // Hide nav buttons on admin page
+            if (pageId === 'adminPage') {
+                document.getElementById('navButtons').classList.add('hidden');
+            } else {
+                document.getElementById('navButtons').classList.remove('hidden');
+            }
+        }
+
+        // Search Orders (Public)
+        async function searchOrders() {
+            await loadTasks();
+            
+            const searchName = document.getElementById('searchName').value.trim().toLowerCase();
+            const searchDate = document.getElementById('searchDate').value;
+
+            if (!searchName && !searchDate) {
+                alert('กรุณากรอกชื่อหรือวันที่จัดส่ง');
+                return;
+            }
+
+            let results = tasks;
+
+            if (searchName) {
+                results = results.filter(task => 
+                    task.customer.name.toLowerCase().includes(searchName)
+                );
+            }
+
+            if (searchDate) {
+                results = results.filter(task => {
+                    if (!task.deadline) return false;
+                    const taskDate = task.deadline.split('T')[0];
+                    return taskDate === searchDate;
+                });
+            }
+
+            displaySearchResults(results);
+        }
+
+        function displaySearchResults(results) {
+            const resultsDiv = document.getElementById('searchResults');
+            const listDiv = document.getElementById('searchResultsList');
+
+            if (results.length === 0) {
+                listDiv.innerHTML = `
+                    <div class="empty-state">
+                        <p>😔 ไม่พบออเดอร์ที่ค้นหา</p>
+                        <p>กรุณาตรวจสอบชื่อหรือวันที่อีกครั้ง</p>
+                    </div>
+                `;
+            } else {
+                listDiv.innerHTML = results.map(task => `
+                    <div class="task-item priority-${task.priority}">
+                        <div class="task-header">
+                            <div>
+                                <div class="task-title">${escapeHtml(task.title)}</div>
+                                <div class="task-customer">👤 ${escapeHtml(task.customer.name)}</div>
+                                <div class="task-contact">
+                                    📞 ${escapeHtml(task.customer.phone)}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="priority-badge priority-${task.priority}-badge">
+                                    ${getPriorityText(task.priority)}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="task-description">${escapeHtml(task.description)}</div>
+                        
+                        <div class="task-meta">
+                            <span>📅 วันที่สั่ง: ${formatDate(task.createdAt)}</span>
+                            ${task.deadline ? `<span>🚚 วันที่จัดส่ง: ${formatDateOnly(task.deadline)}</span>` : ''}
+                        </div>
+                        
+                        <div style="margin-top: 15px;">
+                            <span class="status-badge status-${task.status}">
+                                สถานะ: ${getStatusText(task.status)}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            resultsDiv.classList.remove('hidden');
+        }
+
+        // Admin Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (ADMIN_CREDENTIALS[username] && ADMIN_CREDENTIALS[username] === password) {
+                currentAdmin = username;
+                localStorage.setItem('loggedInAdmin', username);
+                errorDiv.classList.add('hidden');
+                currentPage = 'admin';
+                showPage('adminPage');
+                document.getElementById('adminName').textContent = currentAdmin;
+                loadTasks();
+            } else {
+                errorDiv.textContent = '❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+                errorDiv.classList.remove('hidden');
+            }
+        });
+
+        // Logout
+        function logout() {
+            if (confirm('ต้องการออกจากระบบใช่หรือไม่?')) {
+                localStorage.removeItem('loggedInAdmin');
+                currentAdmin = null;
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                goToPublic();
+            }
+        }
+
+        // Load tasks
+        async function loadTasks() {
+            if (!storageAvailable) {
+                const saved = localStorage.getItem('customer-tasks');
+                if (saved) {
+                    try {
+                        tasks = JSON.parse(saved);
+                    } catch (e) {
+                        tasks = [];
+                    }
+                }
+                if (currentPage === 'admin') {
+                    renderTasks();
+                    updateStats();
+                }
+                return;
+            }
+
+            try {
+                const result = await window.storage.get('customer-tasks');
+                if (result && result.value) {
+                    tasks = JSON.parse(result.value);
+                }
+            } catch (error) {
+                tasks = [];
+            }
+            
+            if (currentPage === 'admin') {
+                renderTasks();
+                updateStats();
+            }
+        }
+
+        // Save tasks
+        async function saveTasks() {
+            if (!storageAvailable) {
+                try {
+                    localStorage.setItem('customer-tasks', JSON.stringify(tasks));
+                    return true;
+                } catch (e) {
+                    console.error('Error saving to localStorage:', e);
+                    return false;
+                }
+            }
+
+            try {
+                const result = await window.storage.set('customer-tasks', JSON.stringify(tasks));
+                return result;
+            } catch (error) {
+                console.error('Error saving tasks:', error);
+                return null;
+            }
+        }
+
+        // Add new task
+        document.getElementById('taskForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const newTask = {
+                id: Date.now().toString(),
+                customer: {
+                    name: document.getElementById('customerName').value.trim(),
+                    phone: document.getElementById('customerPhone').value.trim(),
+                    email: document.getElementById('customerEmail').value.trim()
+                },
+                title: document.getElementById('taskTitle').value.trim(),
+                description: document.getElementById('taskDescription').value.trim(),
+                priority: document.getElementById('taskPriority').value,
+                deadline: document.getElementById('taskDeadline').value,
+                status: 'pending',
+                createdBy: currentAdmin,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            tasks.unshift(newTask);
+            await saveTasks();
+            renderTasks();
+            updateStats();
+            this.reset();
+            
+            alert('✅ เพิ่มงานเรียบร้อยแล้ว');
+        });
+
+        // Change task status
+        async function changeStatus(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+
+            const statuses = ['pending', 'inprogress', 'completed', 'cancelled'];
+            const currentIndex = statuses.indexOf(task.status);
+            const nextIndex = (currentIndex + 1) % statuses.length;
+            
+            task.status = statuses[nextIndex];
+            task.updatedAt = new Date().toISOString();
+            task.updatedBy = currentAdmin;
+            
+            await saveTasks();
+            renderTasks();
+            updateStats();
+        }
+
+        // Delete task
+        async function deleteTask(id) {
+            if (confirm('ต้องการลบงานนี้ใช่หรือไม่?')) {
+                tasks = tasks.filter(t => t.id !== id);
+                await saveTasks();
+                renderTasks();
+                updateStats();
+            }
+        }
+
+        // Get status text
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'รอดำเนินการ',
+                'inprogress': 'กำลังดำเนินการ',
+                'completed': 'เสร็จสิ้น',
+                'cancelled': 'ยกเลิก'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Get priority text
+        function getPriorityText(priority) {
+            const priorityMap = {
+                'low': 'ต่ำ',
+                'medium': 'ปานกลาง',
+                'high': 'สูง'
+            };
+            return priorityMap[priority] || priority;
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('th-TH', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function formatDateOnly(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('th-TH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Render tasks
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            
+            let filteredTasks = tasks;
+            if (currentFilter !== 'all') {
+                filteredTasks = tasks.filter(t => t.status === currentFilter);
+            }
+
+            if (filteredTasks.length === 0) {
+                taskList.innerHTML = `
+                    <div class="empty-state">
+                        <p>ไม่มีรายการงาน</p>
+                    </div>
+                `;
+                return;
+            }
+
+            taskList.innerHTML = filteredTasks.map(task => `
+                <div class="task-item priority-${task.priority}">
+                    <div class="task-header">
+                        <div>
+                            <div class="task-title">${escapeHtml(task.title)}</div>
+                            <div class="task-customer">👤 ${escapeHtml(task.customer.name)}</div>
+                            <div class="task-contact">
+                                📞 ${escapeHtml(task.customer.phone)}
+                                ${task.customer.email ? `<br>✉️ ${escapeHtml(task.customer.email)}` : ''}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="priority-badge priority-${task.priority}-badge">
+                                ${getPriorityText(task.priority)}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="task-description">${escapeHtml(task.description)}</div>
+                    
+                    <div class="task-meta">
+                        <span>📅 สร้าง: ${formatDate(task.createdAt)}</span>
+                        ${task.deadline ? `<span>🚚 จัดส่ง: ${formatDateOnly(task.deadline)}</span>` : ''}
+                        <span>👤 โดย: ${task.createdBy}</span>
+                    </div>
+                    
+                    <div class="task-actions">
+                        <span class="status-badge status-${task.status}">
+                            ${getStatusText(task.status)}
+                        </span>
+                        <button class="btn-small btn-status" onclick="changeStatus('${task.id}')">
+                            เปลี่ยนสถานะ
+                        </button>
+                        <button class="btn-small btn-delete" onclick="deleteTask('${task.id}')">
+                            ลบ
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalTasks').textContent = tasks.length;
+            document.getElementById('pendingTasks').textContent = tasks.filter(t => t.status === 'pending').length;
+            document.getElementById('inprogressTasks').textContent = tasks.filter(t => t.status === 'inprogress').length;
+            document.getElementById('completedTasks').textContent = tasks.filter(t => t.status === 'completed').length;
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Tab filtering
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderTasks();
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            goToPublic();
+        });
+    </script>
+</body>
+</html>
