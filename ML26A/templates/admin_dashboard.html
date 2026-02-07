@@ -18,12 +18,13 @@
             padding: 20px;
         }
 
-        .container {
+        .container {        
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .header {
+            top: 20px;
             background: white;
             padding: 30px;
             border-radius: 20px;
@@ -224,7 +225,25 @@
             background: #f8d7da;
             color: #842029;
         }
-
+        .nav-buttons {
+            position: fixed;
+            top: 86px;
+            right: 350px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        .nav-btn {
+            padding: 9px 15px;
+            background: white;
+            border: 1px solid #667eea;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #667eea;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
         .btn-small {
             padding: 6px 12px;
             font-size: 0.85em;
@@ -307,6 +326,10 @@
     </style>
 </head>
 <body>
+    <div class="nav-buttons">
+        <a href="/" class="nav-btn">📝 สั่งงาน</a>
+        <a href="/tracking" class="nav-btn">🔍 ตรวจสอบออเดอร์</a>
+    </div>
     <div class="container">
         <div class="header">
             <div class="header-left">
