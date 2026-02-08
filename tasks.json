@@ -10,10 +10,11 @@
     "description": "เครื่องให้ปุ็ยให้น้ำอัตโนมัต",
     "priority": "high",
     "deadline": "2026-02-13",
-    "status": "pending",
+    "status": "inprogress",
     "createdBy": "ลูกค้า",
     "createdAt": "2026-02-07T20:24:51.973536",
-    "updatedAt": "2026-02-07T20:24:51.973550"
+    "updatedAt": "2026-02-08T09:28:22.849252",
+    "updatedBy": "admin"
   },
   {
     "id": "1770416716592",
